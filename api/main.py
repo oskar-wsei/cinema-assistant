@@ -6,6 +6,7 @@ import requests_cache
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .assistant.router import router as assistant_router
 from .cinemacity.client import CinemaCityClient
 from .common.config import Settings, get_settings
 from .common.errors import register_exception_handlers
@@ -21,6 +22,7 @@ TAGS_METADATA = [
     {'name': 'Cities', 'description': 'Cities with Cinema City cinemas.'},
     {'name': 'Feeds', 'description': 'Curated movie lists from the website.'},
     {'name': 'Attributes', 'description': 'Values for `attribute` filters.'},
+    {'name': 'Chat', 'description': 'AI assistant chat'},
     {'name': 'Health', 'description': 'Service health.'},
 ]
 
@@ -53,7 +55,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
-        allow_methods=['GET'],
+        allow_methods=['GET', 'POST', 'OPTIONS'],
         allow_headers=['*'],
     )
     register_exception_handlers(app)
@@ -62,6 +64,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(cities.router)
     app.include_router(feeds.router)
     app.include_router(attributes.router)
+    app.include_router(assistant_router)
     app.include_router(health.router)
     return app
 

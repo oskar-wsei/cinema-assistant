@@ -1,0 +1,72 @@
+@if (isOpen()) {
+  <section class="chat" role="dialog" aria-labelledby="chat-title" (keydown.escape)="close()">
+    <header class="chat__header">
+      <h2 id="chat-title" class="chat__title">Asystent AI</h2>
+      <button type="button" class="chat__icon-button" aria-label="Zamknij czat" (click)="close()">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+          />
+        </svg>
+      </button>
+    </header>
+
+    <div #messageList class="chat__messages" aria-live="polite">
+      @for (message of messages(); track message.id) {
+        <p
+          class="chat__message"
+          [class.chat__message--user]="message.role === 'user'"
+          [class.chat__message--assistant]="message.role === 'assistant'"
+        >
+          <span class="visually-hidden">{{ message.role === 'user' ? 'Ty:' : 'Asystent:' }}</span>
+          <span class="chat__text">{{ message.content }}</span>
+        </p>
+      } @empty {
+        <p class="chat__intro">Cześć! Zapytaj mnie o kina, filmy lub seanse.</p>
+      }
+
+      @if (status(); as status) {
+        <p class="chat__status">{{ status }}</p>
+      }
+
+      @if (failed()) {
+        <p class="chat__error" role="alert">Nie udało się uzyskać odpowiedzi. Spróbuj ponownie.</p>
+      }
+    </div>
+
+    <form class="chat__form" (submit)="$event.preventDefault(); send()">
+      <label class="visually-hidden" for="chat-input">Wiadomość</label>
+      <textarea
+        #input
+        id="chat-input"
+        class="chat__input"
+        rows="1"
+        placeholder="Napisz wiadomość…"
+        [maxLength]="maxLength"
+        [value]="draft()"
+        (input)="draft.set(input.value)"
+        (keydown.enter)="submitOnEnter($event)"
+      ></textarea>
+      <button type="submit" class="chat__send" aria-label="Wyślij" [disabled]="!canSend()">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z" />
+        </svg>
+      </button>
+    </form>
+  </section>
+} @else {
+  <button
+    #bubble
+    type="button"
+    class="bubble"
+    aria-label="Otwórz czat z asystentem"
+    aria-haspopup="dialog"
+    (click)="open()"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"
+      />
+    </svg>
+  </button>
+}

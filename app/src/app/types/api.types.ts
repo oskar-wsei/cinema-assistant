@@ -94,6 +94,21 @@ export interface City {
   cinema_ids: string[];
 }
 
+/** Conversation */
+export interface Conversation {
+  /**
+   * Id
+   * The unique identifier of the conversation.
+   */
+  id: string;
+  /**
+   * Created At
+   * The creation timestamp of the conversation.
+   * @format date-time
+   */
+  created_at: string;
+}
+
 /** Coordinates */
 export interface Coordinates {
   /** Latitude */
@@ -156,6 +171,42 @@ export interface Languages {
    * Subtitle languages.
    */
   subtitles: string[];
+}
+
+/** Message */
+export interface Message {
+  /**
+   * Id
+   * The unique identifier of the message.
+   */
+  id: string;
+  /**
+   * Role
+   * The role of the message sender.
+   */
+  role: string;
+  /**
+   * Content
+   * The content of the message.
+   */
+  content: string;
+  /**
+   * Created At
+   * The creation timestamp of the message.
+   * @format date-time
+   */
+  created_at: string;
+}
+
+/** MessageCreate */
+export interface MessageCreate {
+  /**
+   * Content
+   * The content of the message.
+   * @minLength 1
+   * @maxLength 2000
+   */
+  content: string;
 }
 
 /** Movie */
@@ -547,4 +598,19 @@ export interface ListFeedMoviesFeedsFeedNameMoviesGetParams {
    * Feed name, see `GET /feeds`.
    */
   feedName: string;
+}
+
+export interface GetConversationChatConversationsConversationIdGetParams {
+  /** Conversation Id */
+  conversationId: string;
+}
+
+export interface ListMessagesChatConversationsConversationIdMessagesGetParams {
+  /** Conversation Id */
+  conversationId: string;
+}
+
+export interface CreateMessageChatConversationsConversationIdMessagesPostParams {
+  /** Conversation Id */
+  conversationId: string;
 }

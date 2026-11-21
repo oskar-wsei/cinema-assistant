@@ -1,0 +1,198 @@
+.bubble {
+  position: fixed;
+  right: var(--page-gutter);
+  bottom: var(--space-6);
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-round);
+  background: var(--color-brand);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--easing-standard),
+    transform var(--duration-base) var(--easing-standard);
+
+  svg {
+    width: 1.5rem;
+    fill: var(--color-on-brand);
+  }
+
+  &:hover {
+    background: var(--color-brand-hover);
+    transform: scale(1.06);
+  }
+}
+
+.chat {
+  position: fixed;
+  right: var(--page-gutter);
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  width: min(24rem, 100vw);
+  height: min(32rem, calc(100dvh - var(--header-height)));
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-brand);
+  border-bottom: none;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+
+  @media (max-width: 30rem) {
+    right: 0;
+    border-inline: none;
+    border-radius: 0;
+  }
+}
+
+.chat__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.chat__title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+}
+
+.chat__icon-button {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-round);
+  background: none;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing-standard);
+
+  svg {
+    width: 1.25rem;
+    fill: currentColor;
+  }
+
+  &:hover {
+    background: var(--color-surface-raised);
+  }
+}
+
+.chat__messages {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  font-size: var(--font-size-sm);
+}
+
+.chat__message {
+  max-width: 85%;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  overflow-wrap: anywhere;
+}
+
+.chat__message--user {
+  align-self: flex-end;
+  border-bottom-right-radius: var(--radius-sm);
+  background: var(--color-brand);
+  color: var(--color-on-brand);
+}
+
+.chat__message--assistant {
+  align-self: flex-start;
+  border-bottom-left-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+}
+
+.chat__text {
+  white-space: pre-wrap;
+}
+
+.chat__intro,
+.chat__status {
+  color: var(--color-text-muted);
+}
+
+.chat__status {
+  animation: chat-pulse 1.2s ease-in-out infinite;
+}
+
+.chat__error {
+  color: var(--color-danger);
+}
+
+.chat__form {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.chat__input {
+  flex: 1;
+  min-height: 2.5rem;
+  max-height: 8rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  field-sizing: content;
+  resize: none;
+
+  &:focus-visible {
+    outline-offset: -1px;
+  }
+}
+
+.chat__send {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-round);
+  background: var(--color-brand);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing-standard);
+
+  svg {
+    width: 1.25rem;
+    fill: var(--color-on-brand);
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--color-brand-hover);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+@keyframes chat-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
