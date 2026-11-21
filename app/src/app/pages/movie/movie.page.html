@@ -1,0 +1,139 @@
+@if (movie.hasValue()) {
+  @if (view(); as info) {
+    @let movie = info.movie;
+
+    <section class="hero">
+      <img class="hero__backdrop" [src]="movie.poster_url" alt="" aria-hidden="true" />
+      <div class="container hero__inner">
+        <img
+          class="hero__poster"
+          [src]="movie.poster_url"
+          [alt]="'Plakat: ' + movie.title"
+          width="300"
+          height="450"
+        />
+
+        <div class="hero__info">
+          <nav class="breadcrumb" aria-label="Ścieżka nawigacji">
+            <a routerLink="/">Repertuar</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">{{ movie.title }}</span>
+          </nav>
+
+          <h1 class="hero__title">{{ movie.title }}</h1>
+          @if (movie.original_title !== movie.title) {
+            <p class="hero__original-title">{{ movie.original_title }}</p>
+          }
+
+          <ul class="hero__facts">
+            @if (info.ageRating) {
+              <li class="hero__age">{{ info.ageRating }}</li>
+            }
+            @if (info.duration) {
+              <li>{{ info.duration }}</li>
+            }
+            @if (movie.release_date) {
+              <li>Premiera {{ movie.release_date | date: 'd MMMM y' }}</li>
+            }
+            @if (info.genres) {
+              <li class="hero__genres">{{ info.genres }}</li>
+            }
+          </ul>
+
+          @if (info.formats.length) {
+            <ul class="badges hero__formats" aria-label="Dostępne formaty">
+              @for (format of info.formats; track format) {
+                <li class="badge">{{ format }}</li>
+              }
+            </ul>
+          }
+
+          <div class="hero__actions">
+            <button type="button" class="button" (click)="scrollTo('seanse')">Kup bilet</button>
+            @if (movie.trailer_url) {
+              <button type="button" class="button button--secondary" (click)="scrollTo('zwiastun')">
+                Zwiastun
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container content">
+      <div class="content__main">
+        <section aria-labelledby="synopsis-title">
+          <h2 class="section-title" id="synopsis-title">Opis</h2>
+          <p class="synopsis">{{ movie.synopsis }}</p>
+        </section>
+
+        @if (movie.trailer_url; as trailerUrl) {
+          <section id="zwiastun" class="anchor" aria-labelledby="trailer-title">
+            <h2 class="section-title" id="trailer-title">Zwiastun</h2>
+            <app-trailer [url]="trailerUrl" [title]="movie.title" />
+          </section>
+        }
+      </div>
+
+      <aside class="details" aria-labelledby="details-title">
+        <h2 class="section-title" id="details-title">Szczegóły</h2>
+        <dl>
+          <dt>Tytuł oryginalny</dt>
+          <dd>{{ movie.original_title }}</dd>
+          @if (info.genres) {
+            <dt>Gatunek</dt>
+            <dd>{{ info.genres }}</dd>
+          }
+          @if (movie.directors.length) {
+            <dt>Reżyseria</dt>
+            <dd>{{ movie.directors.join(', ') }}</dd>
+          }
+          @if (movie.cast.length) {
+            <dt>Obsada</dt>
+            <dd>{{ movie.cast.join(', ') }}</dd>
+          }
+          @if (info.production) {
+            <dt>Produkcja</dt>
+            <dd>{{ info.production }}</dd>
+          }
+          @if (info.originalLanguages) {
+            <dt>Język oryginalny</dt>
+            <dd>{{ info.originalLanguages }}</dd>
+          }
+          <dt>Ograniczenia wiekowe</dt>
+          <dd>{{ info.ageRating ?? 'Brak informacji' }}</dd>
+        </dl>
+      </aside>
+    </div>
+
+    <section id="seanse" class="container anchor screenings" aria-labelledby="screenings-title">
+      <h2 class="section-title" id="screenings-title">Seanse</h2>
+      <app-movie-screenings
+        [movieId]="movie.id"
+        [city]="city()"
+        [date]="date()"
+        (selectionChange)="showScreenings($event)"
+      />
+    </section>
+  } @else {
+    <div class="status">
+      <p class="status__title">Nie znaleziono filmu</p>
+      <p class="status__text">Ten film nie istnieje lub nie jest już dostępny.</p>
+      <a class="button" routerLink="/">Wróć do repertuaru</a>
+    </div>
+  }
+} @else if (movie.error()) {
+  <div class="status" role="alert">
+    <p class="status__title">Nie udało się wczytać filmu.</p>
+    <p class="status__text">Sprawdź połączenie i spróbuj ponownie.</p>
+    <button type="button" class="button" (click)="movie.reload()">Spróbuj ponownie</button>
+  </div>
+} @else {
+  <div class="container hero__inner" aria-busy="true" aria-label="Wczytywanie filmu">
+    <div class="skeleton hero__poster"></div>
+    <div class="hero__info">
+      <div class="skeleton title-skeleton"></div>
+      <div class="skeleton text-skeleton"></div>
+    </div>
+  </div>
+}

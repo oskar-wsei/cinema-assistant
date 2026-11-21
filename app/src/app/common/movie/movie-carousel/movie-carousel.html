@@ -1,0 +1,31 @@
+<section class="carousel" [attr.aria-labelledby]="headingId">
+  <div class="container carousel__header">
+    <h2 class="section-title" [id]="headingId">{{ heading() }}</h2>
+    <div class="carousel__controls">
+      <button
+        type="button"
+        class="carousel__button"
+        aria-label="Poprzednie filmy"
+        [disabled]="!canScrollBack()"
+        (click)="scrollPage(-1)"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg>
+      </button>
+      <button
+        type="button"
+        class="carousel__button"
+        aria-label="Następne filmy"
+        [disabled]="!canScrollForward()"
+        (click)="scrollPage(1)"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
+      </button>
+    </div>
+  </div>
+
+  <ul #track class="carousel__track" (scroll)="updateScrollState()">
+    @for (movie of movies(); track movie.id) {
+      <li class="carousel__item"><app-movie-card [movie]="movie" /></li>
+    }
+  </ul>
+</section>

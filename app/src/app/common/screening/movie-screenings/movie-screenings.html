@@ -1,0 +1,63 @@
+@if (cities.error() || days.error() || screenings.error()) {
+  <div class="status" role="alert">
+    <p class="status__title">Nie udało się wczytać seansów.</p>
+    <p class="status__text">Sprawdź połączenie i spróbuj ponownie.</p>
+    <button type="button" class="button" (click)="retry()">Spróbuj ponownie</button>
+  </div>
+} @else if (cities.hasValue() && !cities.value().length) {
+  <div class="status">
+    <p class="status__title">Brak zaplanowanych seansów</p>
+    <p class="status__text">Ten film nie jest obecnie grany w żadnym kinie.</p>
+  </div>
+} @else {
+  <div class="filters">
+    @if (selectedCity(); as city) {
+      <label class="city">
+        <svg class="city__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"
+          />
+        </svg>
+        <span class="visually-hidden">Miasto</span>
+        <select #citySelect (change)="selectCity(citySelect.value)">
+          @for (option of cities.value(); track option.id) {
+            <option [value]="option.id" [selected]="option.id === city.id">
+              {{ option.name }}
+            </option>
+          }
+        </select>
+      </label>
+    } @else {
+      <div class="skeleton city-skeleton"></div>
+    }
+
+    @if (days.hasValue() && selectedDay(); as day) {
+      <app-day-picker [days]="days.value()" [selected]="day" (selectedChange)="selectDay($event)" />
+    } @else if (!days.hasValue()) {
+      <div class="skeleton days-skeleton"></div>
+    }
+  </div>
+
+  @if (days.hasValue() && !days.value().length) {
+    <div class="status">
+      <p class="status__title">Brak seansów w tym mieście</p>
+      <p class="status__text">Wybierz inne miasto.</p>
+    </div>
+  } @else if (screenings.hasValue() && !screenings.isLoading()) {
+    <div class="cinemas">
+      @for (cinemaScreenings of screenings.value(); track cinemaScreenings.cinema.id) {
+        <app-cinema-showtimes [cinemaScreenings]="cinemaScreenings" />
+      } @empty {
+        <div class="status">
+          <p class="status__title">Brak seansów tego dnia</p>
+          <p class="status__text">Wybierz inny dzień lub miasto.</p>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="cinemas" aria-busy="true" aria-label="Wczytywanie seansów">
+      <div class="skeleton cinema-skeleton"></div>
+      <div class="skeleton cinema-skeleton"></div>
+    </div>
+  }
+}

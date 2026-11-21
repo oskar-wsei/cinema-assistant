@@ -1,0 +1,27 @@
+@if (videoId()) {
+  <div class="trailer">
+    @if (playing()) {
+      <iframe
+        [src]="embedUrl()"
+        [title]="'Zwiastun: ' + title()"
+        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+      ></iframe>
+    } @else {
+      <button
+        type="button"
+        class="trailer__start"
+        [attr.aria-label]="'Odtwórz zwiastun: ' + title()"
+        (click)="playing.set(true)"
+      >
+        <img [src]="thumbnailUrl()" alt="" loading="lazy" decoding="async" />
+        <span class="trailer__play" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+        </span>
+      </button>
+    }
+  </div>
+} @else {
+  <a class="button button--secondary" [href]="url()" target="_blank" rel="noopener">
+    Obejrzyj zwiastun
+  </a>
+}

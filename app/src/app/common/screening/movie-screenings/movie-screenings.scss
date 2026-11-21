@@ -1,0 +1,65 @@
+:host {
+  display: block;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.city {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  select {
+    min-width: 12rem;
+    height: 3.25rem;
+    padding: 0 var(--space-8) 0 var(--space-8);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")
+      no-repeat right var(--space-3) center / 1rem;
+    color: var(--color-text);
+    font: inherit;
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    appearance: none;
+
+    &:hover {
+      border-color: var(--color-brand);
+    }
+  }
+}
+
+.city__icon {
+  position: absolute;
+  left: var(--space-3);
+  width: 1.1rem;
+  fill: var(--color-brand);
+  pointer-events: none;
+}
+
+.cinemas {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.city-skeleton {
+  width: 12rem;
+  height: 3.25rem;
+}
+
+.days-skeleton {
+  flex: 1;
+  max-width: 32rem;
+  height: 3.75rem;
+}
+
+.cinema-skeleton {
+  height: 14rem;
+}

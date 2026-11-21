@@ -1,0 +1,28 @@
+<h1 class="visually-hidden">Cinema City - repertuar</h1>
+
+@if (sections.hasValue()) {
+  @for (section of sections.value(); track section.feedName) {
+    @if (section.movies.length) {
+      <app-movie-carousel [heading]="section.title" [movies]="section.movies" />
+    }
+  }
+} @else if (sections.error()) {
+  <div class="status" role="alert">
+    <p class="status__title">Nie udało się wczytać repertuaru.</p>
+    <p class="status__text">Sprawdź połączenie i spróbuj ponownie.</p>
+    <button type="button" class="button" (click)="homeFeeds.retry()">Spróbuj ponownie</button>
+  </div>
+} @else {
+  <div class="placeholder" aria-busy="true" aria-label="Wczytywanie repertuaru">
+    @for (section of skeletonSections; track section) {
+      <div class="container" aria-hidden="true">
+        <div class="skeleton placeholder__heading"></div>
+        <div class="placeholder__row">
+          @for (card of skeletonCards; track card) {
+            <div class="skeleton placeholder__card"></div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}

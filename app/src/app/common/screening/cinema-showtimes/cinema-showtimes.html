@@ -1,0 +1,59 @@
+<article class="cinema">
+  <header class="cinema__header">
+    <h3 class="cinema__name">{{ cinema().name }}</h3>
+    <p class="cinema__address">
+      {{ cinema().address.street }}, {{ cinema().address.postal_code }}
+      {{ cinema().address.city }}
+    </p>
+  </header>
+
+  @for (version of versions(); track version.key) {
+    <div class="version">
+      <div class="version__label">
+        <ul class="badges" aria-label="Format">
+          @for (format of version.formats; track format) {
+            <li class="badge">{{ format }}</li>
+          }
+        </ul>
+        <span>{{ version.language }}</span>
+      </div>
+
+      <ul class="times">
+        @for (screening of version.screenings; track screening.id) {
+          <li>
+            @if (isBookable(screening)) {
+              <a
+                class="time"
+                [class.time--few-seats]="hasFewSeatsLeft(screening)"
+                [href]="screening.booking_url"
+                target="_blank"
+                rel="noopener"
+                [title]="'Wolne miejsca: ' + (screening.seat_availability | percent)"
+              >
+                {{ screening.starts_at | date: 'HH:mm' }}
+                <span class="time__seats" aria-hidden="true">
+                  <span [style.width.%]="screening.seat_availability * 100"></span>
+                </span>
+                <span class="visually-hidden">
+                  , {{ screening.auditorium }}, wolne miejsca:
+                  {{ screening.seat_availability | percent }}
+                </span>
+              </a>
+            } @else {
+              <span class="time time--unavailable">
+                {{ screening.starts_at | date: 'HH:mm' }}
+                <span class="visually-hidden">
+                  {{ screening.sold_out ? ', wyprzedany' : ', seans już się rozpoczął' }}
+                </span>
+              </span>
+            }
+          </li>
+        }
+      </ul>
+
+      @if (version.extras.length) {
+        <p class="version__extras">{{ version.extras.join(' · ') }}</p>
+      }
+    </div>
+  }
+</article>

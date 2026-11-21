@@ -1,0 +1,16 @@
+<ul class="days" aria-label="Dzień seansu">
+  @for (option of options(); track option.day) {
+    <li>
+      <button
+        type="button"
+        class="day"
+        [attr.aria-pressed]="option.day === selected()"
+        [attr.aria-label]="option.day | date: 'EEEE, d MMMM'"
+        (click)="selectedChange.emit(option.day)"
+      >
+        <span class="day__name">{{ option.relativeName ?? (option.day | date: 'EEEEEE') }}</span>
+        <span class="day__date">{{ option.day | date: 'd MMM' }}</span>
+      </button>
+    </li>
+  }
+</ul>
